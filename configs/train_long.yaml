@@ -1,0 +1,138 @@
+###Trainer###
+trainer: score_distillation
+# gc_interval: 100  # 回收缓存的步数
+max_iters: 3000
+log_iters: 1000
+mixed_precision: true
+seed: 0
+distribution_loss: dmd_switch
+load_raw_video: false
+gradient_accumulation_steps: 1
+max_checkpoints: -1 # 不受限
+auto_resume: False  # 不会自动在logdir中读取训练权重resume
+logdir: ckpt/test
+
+# # 断点续传
+# lora_checkpoint_path: z_ckpt/path
+# resume_step: False
+
+# EMA
+ema_weight: 0.99
+ema_start_step: 200
+
+# pre-train ckpt
+generator_ckpt: ckpt/models/base.pt
+
+# dataloader
+data_path: ckpt/prompts/train/vidprom_filtered_extended_switch.txt
+switch_prompt_path: ckpt/prompts/train/vidprom_filtered_extended_switch.txt
+# video_json_path: train.json  # gan required
+batch_size: 1
+total_batch_size: 64
+
+
+# fsdp config
+generator_fsdp_wrap_strategy: size
+real_score_fsdp_wrap_strategy: size
+fake_score_fsdp_wrap_strategy: size
+text_encoder_fsdp_wrap_strategy: size
+sharding_strategy: hybrid_full
+
+# optimizer generator
+lr: 1.0e-05
+beta1: 0.0
+beta2: 0.999
+# optimizer critic
+lr_critic: 2.0e-06
+beta1_critic: 0.0
+beta2_critic: 0.999
+##########
+
+##### sample config #####
+dfake_gen_update_ratio: 5
+image_or_video_shape:
+- 1
+- 240 # unused in streaming training
+- 16
+- 60
+- 104
+negative_prompt: '色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走'
+##########
+
+##### DMD config #####
+gradient_checkpointing: true
+num_frame_per_block: 3  # 每个block产生的帧数
+same_step_across_blocks: true  # 每个block是否采用相同的timestep来计算梯度
+num_train_timestep: 1000  # 采样的timestep最大值
+timestep_shift: 5.0
+real_name: wan_models/Wan2.1-T2V-14B
+fake_name: wan_models/Wan2.1-T2V-1.3B
+generator_name: wan_models/Wan2.1-T2V-1.3B
+ts_schedule: false  # range sample时使用backward step的下界
+denoising_loss_type: flow  # 更新critic的loss
+denoising_step_list:
+- 1000
+- 750
+- 500
+- 250
+warp_denoising_step: true #  # 在generator推理时，将上述四个步骤转换到scheduler的timestep上
+model_kwargs:
+  timestep_shift: 5.0
+  local_attn_size: 12  # 计算attention的尺寸，决定计算attention的kv cache的长度，包含sink
+  sink_size: 3  # sink尺寸
+
+guidance_scale: 3.0
+#### StreamingTrainingPipeline ####
+global_sink: true  # 不在recache的时候清理掉sink
+slice_last_frames: 21
+rope_enhance: true
+streaming_training: true
+sink_update_ratio: 0.0
+use_prompt_cache: true
+# test 
+use_decouple_dmd: false
+use_gan: false
+
+# Visualization
+# vis_interval: 500
+vis_interval: -1  # 不做可视化
+vis_ema: false
+vis_video_lengths:
+- 240
+val_batch_size: 1
+val_data_path: ckpt/prompts/train/vidprom_filtered_extended.txt
+val_switch_prompt_path: ckpt/prompts/train/vidprom_filtered_extended_switch.txt
+
+
+switch_mode: random_choice  # 根据下面的序列随机选择切换prompt的帧，每次训练从这里面筛选一个节点换一次prompt。
+switch_choices:
+- 21
+- 39
+- 57
+- 75
+- 93
+- 111
+- 129
+- 147
+- 165
+- 183
+- 201
+
+streaming_chunk_size: 21
+streaming_max_length: 240  # 最大的生成长度, 但是训练只到237，见can_generate_more函数
+# streaming_possible_max_length: None  # 可以定义最大生成长度的list，会从里面随机选取
+
+streaming_min_new_frame: 18
+train_first_chunk: true
+
+last_step_only: false  # 是否只选择最后一个去噪step做梯度计算
+
+## LoRA Configuration
+adapter:
+  type: "lora"
+  rank: 256                    # LoRA rank (typical values: 8, 16, 32, 64)
+  alpha: 256                   # LoRA alpha (typically same as rank, but can be different)
+  dropout: 0.0                # LoRA dropout rate
+  dtype: "bfloat16"          # Data type for LoRA parameters: "bfloat16", "float16", "float32"
+  apply_to_critic: true       # Whether to apply LoRA to critic/fake_score model
+  verbose: true              # Whether to print all target module names

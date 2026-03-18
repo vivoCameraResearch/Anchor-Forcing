@@ -1,0 +1,39 @@
+denoising_step_list:
+- 1000
+- 750
+- 500
+- 250
+warp_denoising_step: true # need to remove - 0 in denoising_step_list if warp_denoising_step is true
+num_frame_per_block: 3
+model_name: wan_models/Wan2.1-T2V-1.3B
+model_kwargs:
+  local_attn_size: 12
+  timestep_shift: 5.0
+  sink_size: 3
+
+
+# inference
+data_path: ckpt/prompts/bench/vbench_all_dimension_extended.txt
+output_folder: videos/5s_case
+inference_iter: -1
+# num_output_frames: 120
+num_output_frames: 21  # 5s
+use_ema: false
+seed: 33
+num_samples: 1
+save_with_index: true
+global_sink: true
+context_noise: 0
+rope_enhance: true
+use_prompt_cache: true
+
+generator_ckpt: ckpt/models/base.pt
+lora_ckpt: ckpt/models/final.pt
+
+adapter:
+  type: "lora"
+  rank: 256                    # LoRA rank (typical values: 8, 16, 32, 64)
+  alpha: 256                   # LoRA alpha (typically same as rank, but can be different)
+  dropout: 0.0                # LoRA dropout rate
+  dtype: "bfloat16"          # Data type for LoRA parameters: "bfloat16", "float16", "float32"
+  verbose: false              # Whether to print all target module names
