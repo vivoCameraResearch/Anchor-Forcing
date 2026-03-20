@@ -97,14 +97,14 @@ This codebase builds on [LongLive](https://github.com/NVlabs/LongLive). Thanks f
 
 ## 🌏 Citation
 
-<!-- ```bibtex
-@article{yang2025any,
-  title={Any-to-Bokeh: One-Step Video Bokeh via Multi-Plane Image Guided Diffusion},
-  author={Yang, Yang and Zheng, Siming and Chen, Jinwei and Wu, Boxi and He, Xiaofei and Cai, Deng and Li, Bo and Jiang, Peng-Tao},
-  journal={arXiv preprint arXiv:2505.21593},
-  year={2025}
+```bibtex
+@article{yang2026anchor,
+  title={Anchor Forcing: Anchor Memory and Tri-Region RoPE for Interactive Streaming Video Diffusion},
+  author={Yang, Yang and Zhang, Tianyi and Huang, Wei and Chen, Jinwei and Wu, Boxi and He, Xiaofei and Cai, Deng and Li, Bo and Jiang, Peng-Tao},
+  journal={arXiv preprint arXiv:2603.13405},
+  year={2026}
 }
-``` -->
+```
 
 ## 📧 Contact
 
