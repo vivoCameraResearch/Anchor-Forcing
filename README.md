@@ -18,7 +18,7 @@
 - [x] Release the code
 - [x] Release the inference pipeline
 - [x] Release the training files
-- [ ] Release the model weights
+- [x] Release the model weights
 
 ## :wrench: Installation
 We tested this repo on the following setup:
@@ -53,7 +53,9 @@ huggingface-cli download Wan-AI/Wan2.1-T2V-1.3B --local-dir wan_models/Wan2.1-T2
 
 **Download checkpoints**
 
-TODO: The checkpoints is currently under internal review.
+```
+huggingface-cli download young98/AnchorForcing --local-dir ckpt
+```
 
 **Single Prompt Video Generation**
 ```
