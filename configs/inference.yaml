@@ -27,8 +27,8 @@ context_noise: 0
 rope_enhance: true
 use_prompt_cache: true
 
-generator_ckpt: ckpt/models/base.pt
-lora_ckpt: ckpt/models/final.pt
+generator_ckpt: ckpt/base.pt
+lora_ckpt: ckpt/final.pt
 
 adapter:
   type: "lora"
