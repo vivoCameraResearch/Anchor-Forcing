@@ -29,8 +29,8 @@ sink_update_ratio: 0.0
 rope_enhance: true
 use_prompt_cache: true  # Junction KV cache
 
-generator_ckpt: ckpt/models/base.pt
-lora_ckpt: ckpt/models/final.pt
+generator_ckpt: ckpt/base.pt
+lora_ckpt: ckpt/final.pt
 
 adapter:
   type: "lora"
