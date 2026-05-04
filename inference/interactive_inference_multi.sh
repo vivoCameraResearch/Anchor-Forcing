@@ -13,8 +13,8 @@ for (( i=1; i<=N; i++ )); do
   torchrun \
     --nproc_per_node=8 \
     ${MASTER_PORT_ARG} \
-    /data/vjuicefs_ai_camera_jgroup_acadmic/public_data/11179416/code/LongLive/z_inference/interactive_inference_multi.py \
-    --config_path /data/vjuicefs_ai_camera_jgroup_acadmic/public_data/11179416/code/LongLive/z_inference/configs/longlive_interactive_inference_mem.yaml \
+    inference/interactive_inference_multi.py \
+    --config_path configs/interactive_inference.yaml \
     --seed $SEED
 
   echo "[$(date '+%F %T')] Run $i/$N done"
